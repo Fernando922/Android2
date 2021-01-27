@@ -2,9 +2,12 @@ package br.com.dipaulamobilesolutions.agenda.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import br.com.dipaulamobilesolutions.agenda.R;
 import br.com.dipaulamobilesolutions.agenda.dao.AlunoDAO;
+import br.com.dipaulamobilesolutions.agenda.model.activity.Aluno;
 
 public class ListaAlunosActivity extends AppCompatActivity {
 
@@ -32,6 +36,11 @@ public class ListaAlunosActivity extends AppCompatActivity {
         fabAdicionaAluno = findViewById(R.id.fabAdicionaAluno);
 
         configuraFabNovoAluno();
+
+
+        dao.salva(new Aluno("Fernando", "123456", "454545@sdss"));
+        dao.salva(new Aluno("Pedro", "123456", "454545@sdss"));
+        dao.salva(new Aluno("José", "123456", "454545@sdss"));
 
 
     }
@@ -62,6 +71,14 @@ public class ListaAlunosActivity extends AppCompatActivity {
         ListView lvAlunos = findViewById(R.id.lvAlunos);
 
         lvAlunos.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dao.todos()));
+
+
+        lvAlunos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e("qqr", "onItemClick: oi oi oi ");
+            }
+        });
     }
 }
 
