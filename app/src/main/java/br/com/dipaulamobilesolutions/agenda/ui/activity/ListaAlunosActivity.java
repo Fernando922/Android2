@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.List;
+
 import br.com.dipaulamobilesolutions.agenda.R;
 import br.com.dipaulamobilesolutions.agenda.dao.AlunoDAO;
 import br.com.dipaulamobilesolutions.agenda.model.activity.Aluno;
@@ -38,7 +40,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
         configuraFabNovoAluno();
 
 
-        dao.salva(new Aluno("Fernando", "123456", "454545@sdss"));
+        dao.salva(new Aluno("Fernando", "16994153565", "454545@sdss"));
         dao.salva(new Aluno("Pedro", "123456", "454545@sdss"));
         dao.salva(new Aluno("José", "123456", "454545@sdss"));
 
@@ -69,14 +71,21 @@ public class ListaAlunosActivity extends AppCompatActivity {
 
     private void configuraLista() {
         ListView lvAlunos = findViewById(R.id.lvAlunos);
+        List<Aluno> alunos = dao.todos();
+        lvAlunos.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, alunos));
 
-        lvAlunos.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dao.todos()));
+
 
 
         lvAlunos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.e("qqr", "onItemClick: oi oi oi ");
+                Aluno alunoEscolhido = alunos.get(position);
+
+                Intent intent = new Intent(ListaAlunosActivity.this, FormularioAlunoActivity.class);
+                intent.putExtra("aluno", alunoEscolhido);
+                startActivity(intent);
+
             }
         });
     }

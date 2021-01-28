@@ -1,14 +1,15 @@
 package br.com.dipaulamobilesolutions.agenda.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import br.com.dipaulamobilesolutions.agenda.model.activity.Aluno;
 import br.com.dipaulamobilesolutions.agenda.R;
 import br.com.dipaulamobilesolutions.agenda.dao.AlunoDAO;
+import br.com.dipaulamobilesolutions.agenda.model.activity.Aluno;
 
 public class FormularioAlunoActivity extends AppCompatActivity {
 
@@ -25,12 +26,19 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_aluno);
         setTitle(TITULO_APPBAR);
-
-
         inicializarCampos();
-
-
         configuraBotaoSalvar();
+
+
+        Intent dados = getIntent();
+        Bundle extras = dados.getExtras();
+        Aluno aluno = (Aluno) extras.getSerializable("aluno");  //casting para aluno
+
+
+
+        etNome.setText(aluno.getNome());
+        etTelefone.setText(aluno.getTelefone());
+        etEmail.setText(aluno.getEmail());
     }
 
     private void configuraBotaoSalvar() {
