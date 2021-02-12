@@ -2,11 +2,14 @@ package br.com.dipaulamobilesolutions.agenda.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -38,13 +41,36 @@ public class ListaAlunosActivity extends AppCompatActivity {
         configuraFabNovoAluno();
         configuraLista();
 
+        //dados estaticos serão recriados ao rotacionar a tela, já que a activity é destruida e recriada novamente
         dao.salva(new Aluno("Fernando", "16994153565", "454545@sdss"));
-        dao.salva(new Aluno("Pedro", "123456", "454545@sdss"));
-        dao.salva(new Aluno("José", "123456", "454545@sdss"));
+        dao.salva(new Aluno("Fernando", "16994153565", "454545@sdss"));
+        dao.salva(new Aluno("Fernando", "16994153565", "454545@sdss"));
 
 
     }
 
+    //adiciona menus de contexto
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.activity_lista_alunos_menu, menu);
+    }
+
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+
+        //se nao colocar if e else todos os itens do menu vao ter o mesmo funcionamento
+        if (item.getItemId() == R.id.menu_remove) {
+            AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            Aluno aluEscolhido = adapter.getItem(menuInfo.position);
+            removerAlunoDaLista(aluEscolhido);
+        }
+
+
+        return super.onContextItemSelected(item);
+
+    }
 
     @Override
     protected void onResume() {
@@ -73,19 +99,9 @@ public class ListaAlunosActivity extends AppCompatActivity {
         ListView lvAlunos = findViewById(R.id.lvAlunos);
         configuraAdapter(lvAlunos);
         configuraListenerDeCliquePorItem(lvAlunos);
-        configuraListenerDeCliqueLongoPorItem(lvAlunos);
+        registerForContextMenu(lvAlunos);  //registra no menu de contextoo!
     }
 
-    private void configuraListenerDeCliqueLongoPorItem(ListView lvAlunos) {
-        lvAlunos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Aluno alunoEscolhido = (Aluno) adapterView.getItemAtPosition(position);
-                removerAlunoDaLista(alunoEscolhido);
-                return true;  //significa que vc vai consumir o evento todo!
-            }
-        });
-    }
 
     private void removerAlunoDaLista(Aluno alunoEscolhido) {
         dao.remove(alunoEscolhido);
